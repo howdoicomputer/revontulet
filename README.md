@@ -1,6 +1,6 @@
 # Revontulet | About
 
-Revontulet is an API that - given a set of coordinates, NORAD_ID ids, and colors - will continuously track to see if the provided satellites are over the provided coordinates and then emit light commands if they are.
+Revontulet is an API that - given a set of coordinates, NORAD_ID ids, and colors - will continuously check to see if the provided satellites are over the provided coordinates and then emit light commands if they are.
 
 For example, this curl command hits the `/api/satellites/above/stream` endpoint with these parameters:
 
