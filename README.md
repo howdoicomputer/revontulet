@@ -14,11 +14,12 @@ For example, this curl command hits the `/api/satellites/above/stream` endpoint 
 
 
 ``` sh
-curl -X 'GET' \                               'http://0.0.0.0:8000/api/satellites/above/stream?lat=43.6045&lng=1.444&search_radius=90&sat_color_pairs=10155,blue,11690,red,12818,yellow,14277,green&format=text' \
+curl -X 'GET' \
+  'http://localhost:8000/api/satellites/above/stream?lat=43.6045&lng=1.444&search_radius=90&sat_color_pairs=10155,blue,11690,red,12818,yellow,14277,green&format=text' \
   -H 'accept: application/json'
 ```
 
-And we get back this response:
+And we get back this response as an HTTP stream on a 10 second timer (notice that yellow is missing; it wasn't flying over those coordinates at the time).
 
 ``` sh
 NORAD_10155: blue, NORAD_11690: red, NORAD_14277: green
@@ -28,8 +29,6 @@ NORAD_10155: blue, NORAD_11690: red, NORAD_14277: green
 NORAD_10155: blue, NORAD_11690: red, NORAD_14277: green
 NORAD_10155: blue, NORAD_11690: red, NORAD_14277: green
 ```
-
-The above is an HTTP stream that emits messages on a 10 second timer (notice that yellow is missing; it's because it wasn't flying over those coordinates).
 
 # How it works
 
