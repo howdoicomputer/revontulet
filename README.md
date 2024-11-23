@@ -1,6 +1,6 @@
 # Revontulet | About
 
-Revontulet is an API that - given a set of coordinates, NORAD ids, and colors - will continuously track to see if the provided satellites are over the provided coordinates and then emit light commands if they are.
+Revontulet is an API that - given a set of coordinates, NORAD_ID ids, and colors - will continuously track to see if the provided satellites are over the provided coordinates and then emit light commands if they are.
 
 For example, this curl command hits the `/api/satellites/above/stream` endpoint with these parameters:
 
@@ -9,7 +9,7 @@ For example, this curl command hits the `/api/satellites/above/stream` endpoint 
 | `lat`              | `43.6045`                                     | Latitude of the observer.                   |
 | `lng`              | `1.444`                                       | Longitude of the observer.                  |
 | `search_radius`    | `90`                                          | Search radius in degrees around the observer.|
-| `sat_color_pairs`  | `10155,blue,11690,red,12818,yellow,14277,green`| Comma-separated list of NORAD ID and colors. |
+| `sat_color_pairs`  | `10155,blue,11690,red,12818,yellow,14277,green`| Comma-separated list of NORAD_ID ID and colors. |
 | `format`           | `text`                                        | Response format (`text` or `json`).         |
 
 
@@ -22,12 +22,12 @@ curl -X 'GET' \
 And we get back this response as an HTTP stream on a 10 second timer (notice that yellow is missing; it wasn't flying over those coordinates at the time).
 
 ``` sh
-NORAD_10155: blue, NORAD_11690: red, NORAD_14277: green
-NORAD_10155: blue, NORAD_11690: red, NORAD_14277: green
-NORAD_10155: blue, NORAD_11690: red, NORAD_14277: green
-NORAD_10155: blue, NORAD_11690: red, NORAD_14277: green
-NORAD_10155: blue, NORAD_11690: red, NORAD_14277: green
-NORAD_10155: blue, NORAD_11690: red, NORAD_14277: green
+NORAD_ID_10155: blue, NORAD_ID_11690: red, NORAD_ID_14277: green
+NORAD_ID_10155: blue, NORAD_ID_11690: red, NORAD_ID_14277: green
+NORAD_ID_10155: blue, NORAD_ID_11690: red, NORAD_ID_14277: green
+NORAD_ID_10155: blue, NORAD_ID_11690: red, NORAD_ID_14277: green
+NORAD_ID_10155: blue, NORAD_ID_11690: red, NORAD_ID_14277: green
+NORAD_ID_10155: blue, NORAD_ID_11690: red, NORAD_ID_14277: green
 ```
 
 # How it works
@@ -69,7 +69,7 @@ Satellites (with their colors) currently above Toulouse, France:
 [{"norad_id":5680,"color":"blue"},{"norad_id":6302,"color":"red"},{"norad_id":13603,"color":"yellow"},{"norad_id":14607,"color":"green"}]
 The same satellites but in text format:
 
-"NORAD_5680: blue, NORAD_6302: red, NORAD_13603: yellow, NORAD_14607: green"⏎
+"NORAD_ID_5680: blue, NORAD_ID_6302: red, NORAD_ID_13603: yellow, NORAD_ID_14607: green"⏎
 ```
 
 # Routes
@@ -148,7 +148,7 @@ curl -X 'GET' \
 ```
 
 ``` sh
-"NORAD_11690: blue"⏎
+"NORAD_ID_11690: blue"⏎
 ```
 
 `/api/satellites/above/stream` does the same using server sent events over an HTTP stream

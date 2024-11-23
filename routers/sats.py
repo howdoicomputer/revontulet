@@ -135,7 +135,7 @@ async def get_satellites_above(params: GetSatellitesAboveSchema = Depends()):
                 return filtered
             case "text":
                 formatted_data = ", ".join(
-                    f"NORAD_{pair['norad_id']}: {pair['color']}" for pair in filtered
+                    f"NORAD_ID_{pair['norad_id']}: {pair['color']}" for pair in filtered
                 )
 
                 return formatted_data
@@ -181,7 +181,7 @@ async def get_satellites_above_stream(params: GetSatellitesAboveSchema = Depends
                 match params.format:
                     case "text":
                         formatted_data = ", ".join(
-                            f"NORAD_{pair['norad_id']}: {pair['color']}" for pair in filtered
+                            f"NORAD_ID_{pair['norad_id']}: {pair['color']}" for pair in filtered
                         )
 
                         yield f"{formatted_data}\n"
@@ -244,7 +244,7 @@ async def get_satellites_profile_above(params: GetSatellitesProfileAboveSchema =
         match params.format:
             case "text":
                 formatted_data = ", ".join(
-                    f"{pair.norad_id}: {pair.color}" for pair in matching_pairs
+                    f"NORAD_ID_{pair.norad_id}: {pair.color}" for pair in matching_pairs
                 )
 
                 return f"{formatted_data}\n"
@@ -302,7 +302,7 @@ async def stream_satellites_profile_above(
                     match params.format:
                         case "text":
                             formatted_data = ", ".join(
-                                f"{pair.norad_id}: {pair.color}" for pair in matching_pairs
+                                f"NORAD_ID_{pair.norad_id}: {pair.color}" for pair in matching_pairs
                             )
 
                             yield f"{formatted_data}\n"
