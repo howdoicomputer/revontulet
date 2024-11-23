@@ -45,7 +45,7 @@ The routes themselves use those clients to fetch data and then filter and annota
 
 ## Testing
 
-The external routes are tested using pytest with mocks and stubbed out data. This primary tests interfaces.
+The external routes are tested using pytest with mocks and stubbed out data.
 
 An end-to-end test exists in `scripts/end_to_end_test.sh` that is convenient for me to use. It will curl `/api/satellites` to resolve a set of satellites currently over a coordinate pair and then create a `sat_color_pair` string to feed into the `/api/satellites/above` endpoint to resolve satellites and their color data for a location.
 
@@ -143,8 +143,8 @@ This endpoint is the meat and potatoes. It is delicious and hardy.
 
 ``` sh
 curl -X 'GET' \
-                          'http://0.0.0.0:8000/api/satellites/above?lat=43.6045&lng=1.444&search_radius=90&sat_color_pairs=11690,blue&format=text' \
-                          -H 'accept: application/json'
+  'http://0.0.0.0:8000/api/satellites/above?lat=43.6045&lng=1.444&search_radius=90&sat_color_pairs=11690,blue&format=text' \
+  -H 'accept: application/json'
 ```
 
 ``` sh
@@ -167,7 +167,7 @@ Revontulet exposes Prometheus metrics.
 
 ## Profiles
 
-Profiles are a way for Revontulet to help clients be even thinner. They are preconfigured locations that already include lat/lng coordinates and sat_color_pairs.
+Profiles are a way for Revontulet to help clients be even more thin. They are preconfigured locations that already include lat/lng coordinates and sat_color_pairs.
 
 For example, in `config.py` here are the default profiles:
 
