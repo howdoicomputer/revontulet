@@ -2,6 +2,9 @@ name: Validate
 
 on: [push]
 
+env:
+  N2YO_API_KEY: stub
+
 jobs:
   build:
     runs-on: ubuntu-latest
