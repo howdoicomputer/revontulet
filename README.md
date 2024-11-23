@@ -161,6 +161,10 @@ This route is the same as above but uses profiles for predeclared locations. For
 curl -N "http://localhost:8000/api/satellites/above/profile/stream?name=golden&format=json&search_radius=90"
 ```
 
+## /metrics
+
+Revontulet exposes Prometheus metrics.
+
 ## Profiles
 
 Profiles are a way for Revontulet to help clients be even thinner. They are preconfigured locations that already include lat/lng coordinates and sat_color_pairs.
