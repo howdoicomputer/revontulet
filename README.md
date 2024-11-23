@@ -45,7 +45,7 @@ The routes themselves use those clients to fetch data and then filter and annota
 
 ## Testing
 
-The external routes are tested using pytest with mocks and stubbed out data.
+The external routes are tested using pytest with mocks and stubbed out data. The mocks and stubs allows our tests to be ran without secret injection as well.
 
 An end-to-end test exists in `scripts/end_to_end_test.sh` that is convenient for me to use. It will curl `/api/satellites` to resolve a set of satellites currently over a coordinate pair and then create a `sat_color_pair` string to feed into the `/api/satellites/above` endpoint to resolve satellites and their color data for a location.
 
