@@ -1,4 +1,4 @@
-name: Pylint
+name: Validate
 
 on: [push]
 
@@ -21,4 +21,4 @@ jobs:
         poetry install
     - name: Validate codebase
       run: |
-        make validate
+        poetry run make validate
