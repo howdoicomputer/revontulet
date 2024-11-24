@@ -115,6 +115,12 @@ Now our curl command looks like this:
 curl "https://revontulet.lol/api/satellites/above/profile?name=toulouse&search_radius=5"
 ```
 
+Really, a client running on a raspi can look like this:
+
+```
+curl <stream_endpoint> | write_to_lights.py
+```
+
 # Optional Tasks
 
 ## Provide a script or CI/CD pipeline...
