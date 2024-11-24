@@ -19,6 +19,9 @@ validate:
 	flake8
 	mypy .
 
+e2e:
+	bash scripts/end_to_end_test.sh
+
 push:
 	docker buildx build --platform linux/amd64,linux/arm64 . -t howdoicomputer/revontulet:v$(VERSION) --push
 
