@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: revontulet
+  namespace: revontulet
+  annotations:
+    # This annotation allows for GCP to associate a generated
+    # BackendConfig with the generated classic load balancer.
+    #
+    # The BackendConfig itself is specified in healthcheck.yml
+    #
+    beta.cloud.google.com/backend-config: '{"default": "revontulet"}'
+spec:
+  type: NodePort
+  ports:
+    - name: revontulet
+      port: 8000
+      targetPort: 8000
+      protocol: TCP
+  selector:
+    app: revontulet

@@ -2,6 +2,8 @@
 
 Revontulet is an API that - given a set of coordinates, NORAD_ID ids, and colors - will continuously check to see if the provided satellites are over the provided coordinates and then emit light commands if they are.
 
+API docs: https://revontulet.lol/docs#/
+
 For example, this curl command hits the `/api/satellites/above/stream` endpoint with these parameters:
 
 | Parameter          | Value                                          | Description                                  |
@@ -15,7 +17,7 @@ For example, this curl command hits the `/api/satellites/above/stream` endpoint 
 
 ``` sh
 curl -X 'GET' \
-  'http://localhost:8000/api/satellites/above/stream?lat=43.6045&lng=1.444&search_radius=90&sat_color_pairs=10155,blue,11690,red,12818,yellow,14277,green&format=text' \
+  'https://revontulet.lol/api/satellites/above/stream?lat=43.6045&lng=1.444&search_radius=90&sat_color_pairs=10155,blue,11690,red,12818,yellow,14277,green&format=text' \
   -H 'accept: application/json'
 ```
 
@@ -37,7 +39,7 @@ NORAD_ID_10155: blue, NORAD_ID_11690: red, NORAD_ID_14277: green
 This API sends requests to two upstream APIs: https://sat.terrestre.ar/docs/#/ and https://www.n2yo.com/api/
 
 There are home built API clients for both in `libs/` that use httpx to asynchronously fetch API results and then cache them on a 10 second TTL
-if the responses are 200s.
+if the responses are 200s. The reason why they're writen using httpx is because requests is a synchronous client that will block FastAPIs event loop. There were some open source clients that already existed for the above API but they were synchronous in nature so I had to write my own.
 
 ## Typing and Pydantic
 
@@ -52,8 +54,8 @@ An end-to-end test exists in `scripts/end_to_end_test.sh` that is convenient for
 For example,
 
 ``` sh
-revontulet/scripts main*​
 revontulet-py3.13 ❯ ./end_to_end_test.sh
+
 This script will query out satellites over a location, reprocess them into a sat_color_pair, and then feed that back into the API
 in order to create a representation of functionality.
 
@@ -62,6 +64,7 @@ Toulouse longitude: 1.444
 Search Radius: 15
 Altitude: 0
 Category ID: 0
+Endpoint: https://revontulet.lol
 Resolved these sat_color_pairs: 5680,blue,6302,red,13603,yellow,14607,green
 
 Satellites (with their colors) currently above Toulouse, France:
@@ -80,7 +83,7 @@ This route queries out a single satellite.
 
 ``` sh
 curl -X 'GET' \
-  'http://0.0.0.0:8000/api/satellite?norad_id=8018&lat=43.6045&lng=1.444&days=1&limit=1&tz=America%2FLos_Angeles' \
+  'https://revontulet.lol/api/satellite?norad_id=8018&lat=43.6045&lng=1.444&days=1&limit=1&tz=America%2FLos_Angeles' \
   -H 'accept: application/json'
 ```
 
@@ -133,7 +136,7 @@ For example, to get the list of satellites over Toulouse, France (with a 15 degr
 
 ``` sh
 curl -s -X 'GET' \
-  'http://0.0.0.0:8000/api/satellites?lat=43.6045&lng=1.444&cat=0&alt=0&search_radius=15' \
+  'https://revontulet.lol/api/satellites?lat=43.6045&lng=1.444&cat=0&alt=0&search_radius=15' \
   -H 'accept: application/json'
 ```
 
@@ -143,7 +146,7 @@ This endpoint is the meat and potatoes. It is delicious and hardy.
 
 ``` sh
 curl -X 'GET' \
-  'http://0.0.0.0:8000/api/satellites/above?lat=43.6045&lng=1.444&search_radius=90&sat_color_pairs=11690,blue&format=text' \
+  'https://revontulet.lol/api/satellites/above?lat=43.6045&lng=1.444&search_radius=90&sat_color_pairs=11690,blue&format=text' \
   -H 'accept: application/json'
 ```
 
@@ -158,7 +161,7 @@ curl -X 'GET' \
 This route is the same as above but uses profiles for predeclared locations. For example, in `config.py` you will see entries for Toulouse, France, Golden, CO, and San Francisco, CA. Each location has a set of sat_color_pairs. Instead of setting in HTTP query parameters that specifies lat/lng coordinates, sat_color_pairs, etc, a client can lean on a profile for a simpler request.
 
 ``` sh
-curl -N "http://localhost:8000/api/satellites/above/profile/stream?name=golden&format=json&search_radius=90"
+curl -N "https://revontulet.lol/api/satellites/above/profile/stream?name=golden&format=json&search_radius=90"
 ```
 
 ## /metrics
@@ -213,6 +216,36 @@ class Settings(BaseSettings):
 
 If you want to change the defaults then create `config.json` and place a new set of profiles for Revontulet to load.
 
+Here is what that would look like:
+
+``` json
+{
+  "office_profiles": [
+    {
+      "name": "berkeley",
+      "lat": "37.8715",
+      "lng": "122.2730,
+      "sat_color_pairs": [
+        {
+          "norad_id": "55076",
+          "color": "yellow"
+        },
+        {
+          "norad_id": "48915",
+          "color": "green"
+        },
+        {
+          "norad_id": "59126",
+          "color": "purple"
+        }
+      ]
+    }
+  ]
+}
+```
+
+When you use a `config.json`, Revontulet will override ALL of the default profiles. In this case, only the `berkeley` profile would be available.
+
 # Configuration
 
 There is really only configuration value **required** and that's an `N2YO_API_KEY`. There is an `sample-envrc` in this repository that you can modify and then `cp sample-envrc ./.envrc` to use direnv to autoload that key for development.
@@ -238,12 +271,26 @@ This project uses Poetry to manage dependencies. Follow the install instructions
 
 The Makefile, by default, uses my Dockerhub username and account. You'll need to change it if you want to take ownership of this.
 
-It's instructions look like this:
+The instructions look like this:
 
 ``` sh
-build:
 	poetry export --without-hashes --format=requirements.txt > requirements.txt
-	docker build . -t revontulet-api:v$(VERSION)
+	docker buildx build --platform linux/amd64 . -t howdoicomputer/revontulet:v$(VERSION)
 ```
 
-Then Kubernetes manifests should then be updated to pull down that new version.
+
+The Makefile uses docker buildx to create multiplatform builds in order to support MacOS and Linux/amd64 targets.
+
+# Running via Docker
+
+``` sh
+docker run -d -p 8000:8000 -e N2YO_API_KEY=$N2YO_API_KEY --name revontulet-api howdoicomputer/revontulet:latest
+```
+
+# Deployment
+
+The https://revontulet.lol endpoint is hosted on my [homelab](https://howdoicomputer.lol/posts/homelab-1/) - which is a Nomad server that runs in my house. The files for deploying the API is in `deploy/nomad`.
+
+However, I did write some Kubernetes/ArgoCD manifests and they live in `deploy/k8s`.
+
+---

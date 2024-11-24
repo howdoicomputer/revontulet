@@ -2,7 +2,7 @@ VERSION = 1
 
 build:
 	poetry export --without-hashes --format=requirements.txt > requirements.txt
-	docker build . -t revontulet-api:v$(VERSION)
+	docker buildx build --platform linux/amd64,linux/arm64 . -t howdoicomputer/revontulet:v$(VERSION) --load
 
 run:
 	fastapi dev main.py
@@ -20,7 +20,10 @@ validate:
 	mypy .
 
 push:
-	docker push howdoicomputer/revontulet:v$(VERSION)
+	docker buildx build --platform linux/amd64,linux/arm64 . -t howdoicomputer/revontulet:v$(VERSION) --push
 
 shell:
 	poetry shell
+
+run-docker:
+	docker run -d -p 8000:8000 -e N2YO_API_KEY=$N2YO_API_KEY --name revontulet-api howdoicomputer/revontulet

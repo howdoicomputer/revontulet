@@ -1,0 +1,11 @@
+apiVersion: monitoring.googleapis.com/v1
+kind: PodMonitoring
+metadata:
+  name: revontulet-metrics
+spec:
+  selector:
+    matchLabels:
+      app: revontulet
+  endpoints:
+  - port: metrics
+    interval: 30s

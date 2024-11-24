@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: revontulet
+spec:
+  replicas: 3
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: revontulet
+  template:
+    metadata:
+      labels:
+        app: revontulet
+    spec:
+      nodeSelector:
+        cloud.google.com/compute-class: "Scale-Out"
+      containers:
+        - name: revontulet
+          image: howdoicomputer/revontulet:v1
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: N2YO_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: n2y0
+                  key: key
+          ports:
+            - name: revontulet
+              containerPort: 8000
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 250m
+              memory: 1Gi
+              ephemeral-storage: 10Mi

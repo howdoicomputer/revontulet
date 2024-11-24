@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: revontulet
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/howdoicomputer/revontulet-argocd
+    targetRevision: main
+    path: revontulet-api
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: revontulet
+  syncPolicy:
+    syncOptions:
+      - PruneLast=true
+      # Namespace creation handled by Terraform
+      #
+      - CreateNamespace=false
