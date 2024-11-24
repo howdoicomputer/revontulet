@@ -1,0 +1,14 @@
+#+title: Todo
+
+* TODO Implement OTel tracing
+* TODO Implement structured logging
+* TODO Improve error messages returned to users
+* TODO Version the API
+* TODO Create Dagger pipeline
+* TODO Create profiles via POST (need to configure data storage with it)
+* TODO Create healthcheck
+* TODO Move metrics (and healthcheck) to separate bound port
+* TODO Add an ETA for /satellite
+* TODO Create a frontend_example dir and add a simple React app
+* TODO Create a v2 API schema that supports multimodal color state
+* TODO Go over code to make sure it's perfect
