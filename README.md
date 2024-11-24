@@ -265,7 +265,7 @@ directives to see what it can do.
 
 ## Setup
 
-This project uses Poetry to manage dependencies. Follow the install instructions for that project and then run `poetry install`
+This project uses Poetry to manage dependencies. Install Poetry and then run `poetry install` in the root.
 
 # Shipping a Version
 
@@ -274,14 +274,16 @@ The Makefile, by default, uses my Dockerhub username and account. You'll need to
 The instructions look like this:
 
 ``` sh
-	poetry export --without-hashes --format=requirements.txt > requirements.txt
-	docker buildx build --platform linux/amd64 . -t howdoicomputer/revontulet:v$(VERSION)
+poetry export --without-hashes --format=requirements.txt > requirements.txt
+docker buildx build --platform linux/amd64 . -t howdoicomputer/revontulet:v$(VERSION)
 ```
 
 
 The Makefile uses docker buildx to create multiplatform builds in order to support MacOS and Linux/amd64 targets.
 
 # Running via Docker
+
+This command will pull down the latest Revontulet container and then bind it to port 8000. Make sure you set your N2YO_API_KEY :)
 
 ``` sh
 docker run -d -p 8000:8000 -e N2YO_API_KEY=$N2YO_API_KEY --name revontulet-api howdoicomputer/revontulet:latest
@@ -292,5 +294,7 @@ docker run -d -p 8000:8000 -e N2YO_API_KEY=$N2YO_API_KEY --name revontulet-api h
 The https://revontulet.lol endpoint is hosted on my [homelab](https://howdoicomputer.lol/posts/homelab-1/) - which is a Nomad server that runs in my house. The files for deploying the API is in `deploy/nomad`.
 
 However, I did write some Kubernetes/ArgoCD manifests and they live in `deploy/k8s`.
+
+I thought about deploying this to GKE (I have a bunch of Terraform to do that) but my GCP free credits are running thin and my homelab is incredibly easy to deploy to.
 
 ---
