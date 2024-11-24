@@ -2,7 +2,7 @@
 
 # My Solution
 
-Nothing about the requirement specified that this had to be a CLI utility. Just that it had to be a Python application that took in some input and then spit out "NORAD_ID_1: blue, NORAD_ID_2: green".
+Nothing about the requirements specified that this had to be a CLI utility. Just that it had to be a Python application that took in some input and then spit out "NORAD_ID_1: blue, NORAD_ID_2: green".
 
 Given those loose requirements, I went with what I felt like was the best solution: build an API that extends the other satellite tracking APIs.
 
@@ -16,7 +16,7 @@ I feel like this approach provided a lot of benefits:
 * **Clients can be flexible**: I didn't want to be constrained by the inflexiblity of a configuration file. I wanted to be able to quickly change coordinates, satellites, and color pairings.
 * **Deployments for clients are simpler**: By keeping business logic in a central location, the implementation at the edge is thinner and so there is less that can go wrong. The clients that control the lighting system just need to make one HTTP call and then feed the result into some lights.
 * **Easily extendable**: If I needed to support additional requirements (say, a countdown clock that has an ETA for each satellite for a location) then I just add an API route that provides a countdown. Clients continue to stay thin.
-* **A wee bit more secure**: I can deploy the API to an internal network and make sure that the network path for the applications that controls the lights only have access to that internal API. This makes the security model simpler as I would only have to worry about network access for the API and not N number of clients.
+* **A wee bit more secure**: I can deploy the API to an internal network and make sure that the network path for the applications that controls the lights would only have access to that internal API. This makes the security model simpler as I would only have to worry about network access for the API and not N number of clients.
 * **Removes the burden from upstream APIs/scalability**: I don't know how many edge devices this solution can support *exactly* but this solution is extremely scalable. This is because every 200 request to upstream APIs is cached. That means that even if we have 1000 Raspberry Pis hitting the Revontulet API we wouldn't get throttled upstream because we would be serving cached data with a reasonable TTL.
 
 ## How do I validate this?
@@ -68,9 +68,9 @@ I felt like the requirements output data format ("NORAD_ID_1: green, NORAD_ID_2:
 * Python `>=3.11` - I ended up using 3.13 as that was the latest stable release. Managed locally by pyenv.
 * A `Dockerfile` - There is a Dockerfile and a Makefile that wraps the docker run to create it. I didn't feel like a docker-compose file was needed.
 * Additional libraries can be selected at will - I did.
-* A README.md is expected to detail the chosen solution and how to run it.
-* Relevant unit tests should be provided using pytest - I have written unit tests to test my API routes and a shell script to hit the public API
-* Use Python type annotations - I didn't just use type annotations. Pydantic does complex data validations by creating schemas for every interface
+* A README.md is expected to detail the chosen solution and how to run it - I did
+* Relevant unit tests should be provided using pytest - I have written unit tests to test my API routes using mocked and stubbed data and a shell script to do a more literal end to end test of the system
+* Use Python type annotations - MyPy comes back clean. Additionally, I used Pydantic to define interface schemes and perform data validations for input.
 
 ## Task Fulfillment
 
@@ -103,7 +103,7 @@ curl "https://revontulet.lol/api/satellites/above?lat=43.6045&lng=1.444&cat=0&al
 [{"norad_id":38246,"color":"blue"},{"norad_id":51623,"color":"red"}]
 ```
 
-Wa-lah, given some coordinates, and desired pairs, we get a filtered list of dictionaries representing what was over Toulouse at the time.
+Wa-lah! Given some coordinates, and desired pairs, we get a filtered list of dictionaries representing what was over Toulouse at the time.
 
 ## Second Example
 
