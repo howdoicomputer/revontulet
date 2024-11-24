@@ -170,7 +170,7 @@ There is a long list:
 * Add an ETA for the /satellite endpoint (so a client gets a countdown for when a specific satellite passes over an area)
 * Write a React frontend to visualize the data
 * Get a physical device working
-* Multimodal state representation for lights I.E, a satellite can be approaching, directly overheaad, passing, or just not there. What if we had a light for each state?
+* [ ] Multimodal state representation for lights I.E, a satellite can be approaching, directly overhead, passing, or just not there. What if we had a light for each state?
 * Use the aforementioned instrumentation to build Grafana dashboards
 
 ### Most important and immediate improvements
@@ -184,3 +184,17 @@ However, I personally believe that most logs should structured so that you can p
 Distributed tracing that is compatible with OTel is also important. It's also kind of hard to get right so it was cut so I could deliver on time. However, distributed tracing is VERY cool and VERY useful.
 
 Prometheus metrics are available but just for FastAPI. I also want to track metrics for upstream request failure rates and other internal metrics.
+
+# Dependencies
+
+Here are the libraries I used:
+
+* `fastapi` - The API framework
+* `pydantic` and `pydantic-settings` - Schemas and data validation
+* `httpx` - Asynchronous API client
+* `hishel` - HTTP caching (used with HTTPX)
+* `prometheus-fastapi-instrumentor` - Expose FastAPI metrics via a /metrics endpoint for Prometheus
+* `pytest` and `pytest-asyncio` - Testing framework
+* `flake8-pyproject` - Able to configure flake8 via pyproject.toml
+
+---

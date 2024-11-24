@@ -1,6 +1,6 @@
 # Revontulet | About
 
-Revontulet is an API that - given a set of coordinates, NORAD_ID ids, and colors - will continuously check to see if the provided satellites are over the provided coordinates and then emit light commands if they are.
+Revontulet is an API that - given a set of coordinates, NORAD_IDs, and colors - will continuously check to see if the provided satellites are over the provided coordinates and then emit light commands if they are.
 
 API docs: https://revontulet.lol/docs#/
 
@@ -248,7 +248,7 @@ When you use a `config.json`, Revontulet will override ALL of the default profil
 
 # Configuration
 
-There is really only configuration value **required** and that's an `N2YO_API_KEY`. There is an `sample-envrc` in this repository that you can modify and then `cp sample-envrc ./.envrc` to use direnv to autoload that key for development.
+There is really only one configuration value **required** and that's an `N2YO_API_KEY`. There is an `sample-envrc` in this repository that you can modify and then `cp sample-envrc ./.envrc` to use direnv to autoload that key for development.
 
 However, you are able to override profiles in a `config.json` file. Revontulet is able to start without that configuration file. Additionally, you can specify a `n2yo_api_key` value in that configuration file but it will take backseat to the environment variable equivalent.
 
@@ -265,7 +265,7 @@ directives to see what it can do.
 
 ## Setup
 
-This project uses Poetry to manage dependencies. Install Poetry and then run `poetry install` in the root.
+This project uses Poetry to manage dependencies. Install Poetry and then run `poetry install` in the root directory.
 
 # Shipping a Version
 
