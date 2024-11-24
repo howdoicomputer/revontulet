@@ -224,7 +224,7 @@ Here is what that would look like:
     {
       "name": "berkeley",
       "lat": "37.8715",
-      "lng": "122.2730,
+      "lng": "122.2730",
       "sat_color_pairs": [
         {
           "norad_id": "55076",
