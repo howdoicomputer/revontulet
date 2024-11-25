@@ -28,10 +28,13 @@ func main() {
 	params.Add("lat", fmt.Sprintf("%f", config.Latitude))
 	params.Add("lng", fmt.Sprintf("%f", config.Longitude))
 	params.Add("search_radius", fmt.Sprintf("%d", config.SearchRadius))
+
 	satColorPairs := []string{}
+
 	for id, color := range config.SatColorPairs {
 		satColorPairs = append(satColorPairs, fmt.Sprintf("%s,%s", id, color))
 	}
+
 	params.Add("sat_color_pairs", strings.Join(satColorPairs, ","))
 	params.Add("format", "text")
 
