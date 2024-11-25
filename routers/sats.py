@@ -285,10 +285,6 @@ async def stream_satellites_profile_above(
     """
     This route is the same as /satellites/above/profile except
     it continuously streams the results on a 10 second timer.
-
-    This is a useful route but it can be abused as keeping a
-    connection open can be expensive. It's preferrable to have
-    a client long poll an endpoint.
     """
 
     profiles = settings.office_profiles
