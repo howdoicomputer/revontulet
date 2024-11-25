@@ -142,7 +142,7 @@ curl -s -X 'GET' \
 
 ## /api/satellites/above|stream
 
-This endpoint is the meat and potatoes. It is delicious and hardy.
+This endpoint is the meat and potatoes. It takes in a coordinate pair, a list of sat_color_pairs, and a search_radius in order to create a diffed list of satellites over that passed in set of coordinates.
 
 ``` sh
 curl -X 'GET' \
