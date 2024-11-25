@@ -26,7 +26,6 @@ class SatellitePass(BaseModel):
     rise: EventDetails = Field(..., description="Details about the satellite's rise event.")
     culmination: EventDetails = Field(..., description="Details about the satellite's culmination event.")
     set: EventDetails = Field(..., description="Details about the satellite's set event.")
-    visible: bool = Field(..., description="Whether the satellite is visible during the pass.")
     norad_id: int = Field(..., description="The NORAD ID of the satellite.")
 
 

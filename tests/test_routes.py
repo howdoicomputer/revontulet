@@ -16,7 +16,6 @@ actually require the APIs to be functional.
 These tests don't need Internet to run as everything is mocked out.
 """
 
-
 @pytest.fixture
 def mock_settings(monkeypatch):
     """Mock settings to provide consistent office profiles."""
@@ -112,6 +111,25 @@ def mock_terrestre_response():
     ]
 
 
+"""
+These tests can get rather complex so let's go over the first one.
+
+The @pytest.mark.asyncio decorator marks the test as asynchronous and allows the
+await keyword to be used within the test.
+
+The @patch decorator makes it so that the n2yo client is mocked and will return
+predetermined responses.
+
+The function signature (mock_get_above, mock_n2yo_response) is a bit of magic. The
+mock_get_above parameter is the mocked response from the N2YO client and the
+mock_n2yo_response is defined earlier in this test file as stubbed out data.
+
+mock_get_above.return_value *executes the get_above function within the context of
+the mocked client*.
+
+response = client.get... is the request to the FastAPI endpoint to return a list
+of satellites.
+"""
 @pytest.mark.asyncio
 @patch("revontulet.libs.n2yo_client.client.N2YOClient.get_above", new_callable=AsyncMock)
 async def test_get_satellites(mock_get_above, mock_n2yo_response):
@@ -137,7 +155,7 @@ async def test_get_satellite(mock_get_passes, mock_terrestre_response):
     mock_get_passes.return_value = mock_terrestre_response
 
     response = client.get("/api/satellite", params={
-        "norad_id": "55076",
+        "norad_id": 55076,
         "lat": 43.6045,
         "lng": 1.444,
         "days": 1,
@@ -186,10 +204,11 @@ async def test_get_satellites_profile_above(mock_get_above, mock_n2yo_response, 
     assert response.status_code == 200
     data = response.json()
     assert len(data) == 1
-    assert data[0]["norad_id"] == "55076"
+    assert data[0]["norad_id"] == 55076
     assert data[0]["color"] == "blue"
 
-# This test request requires work and bleh.
+# This test request requires some work. I need to exit the HTTP
+# stream after N number of messages.
 #
 # @pytest.mark.asyncio
 # @patch("revontulet.libs.n2yo_client.client.N2YOClient.get_above", new_callable=AsyncMock)
