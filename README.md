@@ -11,7 +11,7 @@ For example, this curl command hits the `/api/satellites/above/stream` endpoint 
 | `lat`              | `43.6045`                                     | Latitude of the observer.                   |
 | `lng`              | `1.444`                                       | Longitude of the observer.                  |
 | `search_radius`    | `90`                                          | Search radius in degrees around the observer.|
-| `sat_color_pairs`  | `10155,blue,11690,red,12818,yellow,14277,green`| Comma-separated list of NORAD_ID ID and colors. |
+| `sat_color_pairs`  | `10155,blue,11690,red,12818,yellow,14277,green`| Comma-separated list of NORAD_IDs and colors. |
 | `format`           | `text`                                        | Response format (`text` or `json`).         |
 
 
@@ -39,7 +39,7 @@ NORAD_ID_10155: blue, NORAD_ID_11690: red, NORAD_ID_14277: green
 This API sends requests to two upstream APIs: https://sat.terrestre.ar/docs/#/ and https://www.n2yo.com/api/
 
 There are home built API clients for both in `libs/` that use httpx to asynchronously fetch API results and then cache them on a 10 second TTL
-if the responses are 200s. The reason why they're writen using httpx is because requests is a synchronous client that will block FastAPIs event loop. There were some open source clients that already existed for the above API but they were synchronous in nature so I had to write my own.
+if the responses are 200s. The reason why they're writen using httpx is because requests is a synchronous client that will block FastAPI's (the underlying API framework) event loop. There were some open source clients that already existed for the above APIs but they were synchronous in nature so I had to write my own.
 
 ## Typing and Pydantic
 
