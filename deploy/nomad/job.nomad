@@ -33,7 +33,7 @@ job "revontulet" {
       driver = "docker"
 
       config {
-        image = "howdoicomputer/revontulet:v2"
+        image = "howdoicomputer/revontulet:v5"
         ports = ["http"]
       }
 
