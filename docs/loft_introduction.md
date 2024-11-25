@@ -68,9 +68,9 @@ Additionally, supporting the text format makes data valiation for responses more
 ## Must Haves
 
 * Python `>=3.11` - I ended up using 3.13 as that was the latest stable release. Managed locally by pyenv.
-* A `Dockerfile` - There is a Dockerfile and a Makefile that wraps the docker run to create it. I didn't feel like a docker-compose file was needed.
+* A `Dockerfile` - There is a Dockerfile and a Makefile that wraps the `docker run` needed to create it. I didn't feel like a docker-compose file was needed.
 * Additional libraries can be selected at will - I did.
-* A README.md is expected to detail the chosen solution and how to run it - I did
+* A README.md is expected to detail the chosen solution and how to run it - Written.
 * Relevant unit tests should be provided using pytest - I have written unit tests to test my API routes using mocked and stubbed data and a shell script to do a more literal end to end test of the system
 * Use Python type annotations - MyPy comes back clean. Additionally, I used Pydantic to define interface schemes and perform data validations for input.
 
@@ -97,7 +97,7 @@ Toulouse has these coordinates: `43.6045, 1.444`
 
 ## First Example
 
-This curl command hits the /api/satellites/above endpoint with those parameters, a search radius of 5, and a sat_color_pairs set of `{"38246", "blue", "51623": "red"}` (/api/satellites/above/stream does the same thing but opens an HTTP stream)
+This curl command hits the `/api/satellites/above` endpoint with those above coordinates, a search radius of 5, and a `sat_color_pairs` set of `{"38246", "blue", "51623": "red"}` (`/api/satellites/above/stream` does the same thing but opens an HTTP stream)
 
 ```
 curl "https://revontulet.lol/api/satellites/above?lat=43.6045&lng=1.444&cat=0&alt=0&search_radius=5&sat_color_pairs=38246,blue,51623,red"
@@ -105,7 +105,7 @@ curl "https://revontulet.lol/api/satellites/above?lat=43.6045&lng=1.444&cat=0&al
 [{"norad_id":38246,"color":"blue"},{"norad_id":51623,"color":"red"}]
 ```
 
-Wa-lah! Given some coordinates, and desired pairs, we get a filtered list of dictionaries representing what was over Toulouse at the time.
+Wa-lah! Given some coordinates and desired pairs we get a filtered list of dictionaries representing what was over Toulouse at the time.
 
 ## Second Example
 
