@@ -12,7 +12,6 @@ from revontulet.schemas.sats import (
     GetSatellitesAboveRes,
     GetSatellitesProfileAboveReq,
 )
-from schemas.sats import GetSatelliteRes
 from ..config import settings
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -120,10 +119,9 @@ async def get_satellites_above(params: GetSatellitesAboveReq = Depends()):
 
     Assuming that satellite 11690 is over Toulouse, France with a 90 degree search radius,
 
-    revontulet main*​
     ❯ curl -X 'GET' \
-         'https://revontulet.lol/api/satellites/above?lat=43.6045&lng=1.444&search_radius=90&sat_color_pairs=11690,blue' \
-         -H 'accept: application/json'
+    'https://revontulet.lol/api/satellites/above?lat=43.6045&lng=1.444&search_radius=90&sat_color_pairs=11690,blue' \
+    -H 'accept: application/json'
     "NORAD_11690: blue"⏎
     """
     try:

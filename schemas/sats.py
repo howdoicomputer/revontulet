@@ -8,7 +8,7 @@ class GetSatelliteReq(BaseModel):
     lng: float = Field(..., description="Longitude of oberserver point")
     days: Optional[int] = Field(1, description="Number of days to return")
     limit: Optional[int] = Field(1, description="Number of results to return")
-    tz: Optional[str] = Field(None, description="A timezone used to translate the UTC timestamp. Ex: America/Los_Angeles")
+    tz: Optional[str] = Field(None, description="A timezone used to translate the UTC timestamp. Ex: America/Los_Angeles")  # noqa: E501
 
 
 class EventDetails(BaseModel):
@@ -38,7 +38,7 @@ class GetSatellitesReq(BaseModel):
     lng: float = Field(..., description="Observer's longitude in decimal degrees.")
     cat: int = Field(..., description="Satellite category ID. See N2YO documentation for category mappings.")
     alt: Optional[float] = Field(0.0, description="Observer's altitude above sea level in meters. Default is 0.")
-    search_radius: Optional[int] = Field(0, description="Search radius in degrees around the observer's zenith. Default is 90.")
+    search_radius: Optional[int] = Field(0, description="Search radius in degrees around the observer's zenith. Default is 90.")  # noqa: E501
 
 
 class SatelliteAbove(BaseModel):

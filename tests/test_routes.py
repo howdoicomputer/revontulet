@@ -16,6 +16,7 @@ actually require the APIs to be functional.
 These tests don't need Internet to run as everything is mocked out.
 """
 
+
 @pytest.fixture
 def mock_settings(monkeypatch):
     """Mock settings to provide consistent office profiles."""
@@ -130,6 +131,8 @@ the mocked client*.
 response = client.get... is the request to the FastAPI endpoint to return a list
 of satellites.
 """
+
+
 @pytest.mark.asyncio
 @patch("revontulet.libs.n2yo_client.client.N2YOClient.get_above", new_callable=AsyncMock)
 async def test_get_satellites(mock_get_above, mock_n2yo_response):
