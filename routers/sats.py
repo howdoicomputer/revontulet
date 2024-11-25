@@ -2,13 +2,17 @@ from fastapi import HTTPException, APIRouter, Depends
 from fastapi.responses import StreamingResponse
 from revontulet.libs.n2yo_client.client import N2YOClient, GetAboveInputSchema
 from revontulet.libs.terrestre_client.client import TerrestreClient, TerrestreClientGetPasses
-from typing import AsyncGenerator
+from typing import AsyncGenerator, Union
 from revontulet.schemas.sats import (
-    GetSatelliteSchema,
-    GetSatellitesSchema,
-    GetSatellitesAboveSchema,
-    GetSatellitesProfileAboveSchema
+    GetSatelliteReq,
+    GetSatelliteRes,
+    GetSatellitesReq,
+    GetSatellitesRes,
+    GetSatellitesAboveReq,
+    GetSatellitesAboveRes,
+    GetSatellitesProfileAboveReq,
 )
+from schemas.sats import GetSatelliteRes
 from ..config import settings
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -21,8 +25,8 @@ n2yo_client = N2YOClient(settings.n2yo_api_key)
 terrestre_client = TerrestreClient()
 
 
-@router.get("/satellite")
-async def get_satellite(params: GetSatelliteSchema = Depends()):
+@router.get("/satellite", response_model=GetSatelliteRes)
+async def get_satellite(params: GetSatelliteReq = Depends()) -> GetSatelliteRes:
     """
     This route mirrors the Terrestre Pass API but adds some additional
     annotations. Namely, it makes it so that the a caller can pass
@@ -46,11 +50,11 @@ async def get_satellite(params: GetSatelliteSchema = Depends()):
             client_time = utc_time.astimezone(user_tz)
             passes[key]["client_time"] = client_time.strftime("%Y-%m-%d %H:%M:%S %Z")
 
-    return data
+    return GetSatelliteRes.model_validate(data)
 
 
-@router.get("/satellites")
-async def get_satellites(params: GetSatellitesSchema = Depends()):
+@router.get("/satellites", response_model=GetSatellitesRes)
+async def get_satellites(params: GetSatellitesReq = Depends()) -> GetSatellitesRes:
     """
     Fetch satellites above a specific observer location using the N2YO API.
 
@@ -61,7 +65,7 @@ async def get_satellites(params: GetSatellitesSchema = Depends()):
 
     revontulet main*​
     ❯ curl -s -X 'GET' \
-            'http://0.0.0.0:8000/api/satellites?lat=43.6045&lng=1.444&cat=0&alt=0&search_radius=15' \
+            'https://revontulet.lol/api/satellites?lat=43.6045&lng=1.444&cat=0&alt=0&search_radius=15' \
             -H 'accept: application/json' | jq -r '.above | map(.satid) | .[:4] | join(",")'
 
     8018,10155,11690,12671
@@ -77,13 +81,34 @@ async def get_satellites(params: GetSatellitesSchema = Depends()):
 
         result = await n2yo_client.get_above(get_above_input)
 
-        return result
+        # The returned result from the n2yo client doesn't directly
+        # produce a GetSatellitesRes schema. This works for now in
+        # regard to coercing types but should be fixed at within
+        # schemas. I.e, maybe the n2yo client response should
+        # match the GetSatelliteRes model.
+        #
+        transformed_result = {
+            "above": [
+                {
+                    "satid": satellite.satid,
+                    "satname": satellite.satname,
+                    "intDesignator": satellite.intDesignator,
+                    "launchDate": satellite.launchDate,
+                    "satlat": satellite.satlat,
+                    "satlng": satellite.satlng,
+                    "satalt": satellite.satalt,
+                }
+                for satellite in result.above
+            ]
+        }
+
+        return GetSatellitesRes.model_validate(transformed_result)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/satellites/above")
-async def get_satellites_above(params: GetSatellitesAboveSchema = Depends()):
+@router.get("/satellites/above", response_model=Union[GetSatellitesAboveRes, str])
+async def get_satellites_above(params: GetSatellitesAboveReq = Depends()):
     """
     Given a dictionary of NORAD_IDs and colors (sat_color_pairs), a search radius, and a lat/lng pair,
     this route will query out the satellites above the lat/lng pair and then check to see which of the
@@ -97,7 +122,7 @@ async def get_satellites_above(params: GetSatellitesAboveSchema = Depends()):
 
     revontulet main*​
     ❯ curl -X 'GET' \
-         'http://0.0.0.0:8000/api/satellites/above?lat=43.6045&lng=1.444&search_radius=90&sat_color_pairs=11690,blue' \
+         'https://revontulet.lol/api/satellites/above?lat=43.6045&lng=1.444&search_radius=90&sat_color_pairs=11690,blue' \
          -H 'accept: application/json'
     "NORAD_11690: blue"⏎
     """
@@ -123,7 +148,6 @@ async def get_satellites_above(params: GetSatellitesAboveSchema = Depends()):
 
         result = await n2yo_client.get_above(get_above_input)
 
-        # Filter the satellites based on sat_color_pairs
         filtered = [
             {"norad_id": satellite.satid, "color": sat_color_pairs_dict.get(satellite.satid)}
             for satellite in result.above
@@ -146,7 +170,7 @@ async def get_satellites_above(params: GetSatellitesAboveSchema = Depends()):
 
 
 @router.get("/satellites/above/stream")
-async def get_satellites_above_stream(params: GetSatellitesAboveSchema = Depends()):
+async def get_satellites_above_stream(params: GetSatellitesAboveReq = Depends()):
     """
     Same as /satellites/above but creates an HTTP stream and delivers results over that
     stream on a 10 second timer.
@@ -195,8 +219,8 @@ async def get_satellites_above_stream(params: GetSatellitesAboveSchema = Depends
     return StreamingResponse(event_stream(), media_type="text/event-stream")
 
 
-@router.get("/satellites/above/profile")
-async def get_satellites_profile_above(params: GetSatellitesProfileAboveSchema = Depends()):  # noqa: E501
+@router.get("/satellites/above/profile", response_model=Union[GetSatellitesAboveRes, str])
+async def get_satellites_profile_above(params: GetSatellitesProfileAboveReq = Depends()):
     """
     This route uses premade profiles to return satellite data
     for destinations that we know we care about.
@@ -258,7 +282,7 @@ async def get_satellites_profile_above(params: GetSatellitesProfileAboveSchema =
 
 @router.get("/satellites/above/profile/stream")
 async def stream_satellites_profile_above(
-    params: GetSatellitesProfileAboveSchema = Depends()
+    params: GetSatellitesProfileAboveReq = Depends()
 ) -> StreamingResponse:
     """
     This route is the same as /satellites/above/profile except

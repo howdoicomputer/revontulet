@@ -61,6 +61,8 @@ Nothing beats raw visual validation.
 
 I felt like the requirements output data format ("NORAD_ID_1: green, NORAD_ID_2: blue") was weird. It's data that is meant to be read by machines... yet it isn't easily serializable. Therefore I added a `format=json|text` query parameter to support both the requirements text and a structured data output (json).
 
+Additionally, supporting the text format makes data valiation for responses more difficult as it doesn't cleanly map to a Pydantic model.
+
 # Requirements
 
 ## Must Haves

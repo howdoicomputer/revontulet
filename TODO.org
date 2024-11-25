@@ -12,3 +12,4 @@
 * TODO Create a frontend_example dir and add a simple React app
 * TODO Create a v2 API schema that supports multimodal color state
 * TODO Go over code to make sure it's perfect
+* TODO Support cache control headers: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control
