@@ -82,8 +82,8 @@ async def get_satellites(params: GetSatellitesReq = Depends()) -> GetSatellitesR
 
         # The returned result from the n2yo client doesn't directly
         # produce a GetSatellitesRes schema. This works for now in
-        # regard to coercing types but should be fixed at within
-        # schemas. I.e, maybe the n2yo client response should
+        # regards to coercing types but should be fixed at the
+        # schemas level. I.e, maybe the n2yo client response should
         # match the GetSatelliteRes model.
         #
         transformed_result = {
@@ -110,8 +110,8 @@ async def get_satellites(params: GetSatellitesReq = Depends()) -> GetSatellitesR
 async def get_satellites_above(params: GetSatellitesAboveReq = Depends()):
     """
     Given a dictionary of NORAD_IDs and colors (sat_color_pairs), a search radius, and a lat/lng pair,
-    this route will query out the satellites above the lat/lng pair and then check to see which of the
-    passed in satellites (NORAD_IDs) are over that set of coordinates. If they are then
+    this route will query out the satellites above the coordinates and then check to see which of the
+    passed in satellites (NORAD_IDs) are currently overhead. If they are - then
     the response will be the filtered set of sat_color_pairs will be returned either
     as JSON or text (depending on parameter).
 
