@@ -177,8 +177,9 @@ There is a long list:
 * Add an ETA for the /satellite endpoint (so a client gets a countdown for when a specific satellite passes over an area)
 * Write a React frontend to visualize the data
 * Get a physical device working
-* [ ] Multimodal state representation for lights I.E, a satellite can be approaching, directly overhead, passing, or just not there. What if we had a light for each state?
+* Multimodal state representation for lights I.E, a satellite can be approaching, directly overhead, passing, or just not there. What if we had a light for each state?
 * Use the aforementioned instrumentation to build Grafana dashboards
+* Rewrite this in Elixir, Go, Rust, or TypeScript (I'm not the biggest fan of Python for larger projects)
 
 ### Most important and immediate improvements
 
