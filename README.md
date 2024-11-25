@@ -269,7 +269,7 @@ This project uses Poetry to manage dependencies. Install Poetry and then run `po
 
 # Shipping a Version
 
-The Makefile, by default, uses my Dockerhub username and account. You'll need to change it if you want to take ownership of this.
+The Makefile, by default, uses my Dockerhub username and account. You'll need to change it if you want to build your own images.
 
 The instructions look like this:
 
@@ -279,7 +279,7 @@ docker buildx build --platform linux/amd64 . -t howdoicomputer/revontulet:v$(VER
 ```
 
 
-The Makefile uses docker buildx to create multiplatform builds in order to support MacOS and Linux/amd64 targets.
+The Makefile uses docker buildx to create multiplatform builds in order to support multiple architectures.
 
 # Running via Docker
 
@@ -291,7 +291,7 @@ docker run -d -p 8000:8000 -e N2YO_API_KEY=$N2YO_API_KEY --name revontulet-api h
 
 # Deployment
 
-The https://revontulet.lol endpoint is hosted on my [homelab](https://howdoicomputer.lol/posts/homelab-1/) - which is a Nomad server that runs in my house. The files for deploying the API is in `deploy/nomad`.
+The https://revontulet.lol endpoint is hosted on my [homelab](https://howdoicomputer.lol/posts/homelab-1/) - which is a Nomad server that runs in my house. The files for deploying the API are in `deploy/nomad`.
 
 However, I did write some Kubernetes/ArgoCD manifests and they live in `deploy/k8s`.
 
