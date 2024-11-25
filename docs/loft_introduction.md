@@ -127,6 +127,10 @@ Honestly, a client running on a raspi can just look like this:
 curl <stream_endpoint> | write_to_lights.py
 ```
 
+## Third Example
+
+See `scripts/client_example.py` for a Python script that reads some config from a file and opens up a stream only using stdlib.
+
 # Optional Tasks
 
 ## Provide a script or CI/CD pipeline...
