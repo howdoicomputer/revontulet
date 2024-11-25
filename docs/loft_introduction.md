@@ -18,6 +18,7 @@ I feel like this approach provided a lot of benefits:
 * **Easily extendable**: If I needed to support additional requirements (say, a countdown clock that has an ETA for each satellite for a location) then I just add an API route that provides a countdown. Clients continue to stay thin.
 * **A wee bit more secure**: I can deploy the API to an internal network and make sure that the network path for the applications that controls the lights would only have access to that internal API. This makes the security model simpler as I would only have to worry about network access for the API and not N number of clients.
 * **Removes the burden from upstream APIs/scalability**: I don't know how many edge devices this solution can support *exactly* but this solution is extremely scalable. This is because every 200 request to upstream APIs is cached. That means that even if we have 1000 Raspberry Pis hitting the Revontulet API we wouldn't get throttled upstream because we would be serving cached data with a reasonable TTL.
+* **Clients can be in any language**: I know that Python on embedded devices is a thing but what if you wanted to stick to C/C++ for targeting, say, an ESP32 for the light controllers? By making this solution an API, clients can be written in any language. I wrote a Golang example in less than 50 lines.
 
 ## How do I validate this?
 
@@ -129,7 +130,7 @@ curl <stream_endpoint> | write_to_lights.py
 
 ## Third Example
 
-See `scripts/client_example.py` for a Python script that reads some config from a file and opens up a stream only using stdlib.
+See `scripts/client_example.py` for a Python script that reads some config from a file and opens up a stream. It's only a few lines and was written using only the stdlib.
 
 # Optional Tasks
 
