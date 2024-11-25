@@ -1,5 +1,7 @@
 # Revontulet | About
 
+[Introduction for Take Home](/docs/loft_introduction.md)
+
 Revontulet is an API that - given a set of coordinates, NORAD_IDs, and colors - will continuously check to see if the provided satellites are over the provided coordinates and then emit light commands if they are.
 
 API docs: https://revontulet.lol/docs#/
