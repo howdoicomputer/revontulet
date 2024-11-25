@@ -1,0 +1,10 @@
+{
+  "latitude": 43.6045,
+  "longitude": 1.444,
+  "search_radius": 90,
+  "sat_color_pairs": {
+    "21006": "blue",
+    "48915": "white",
+    "59126": "red"
+  }
+}
