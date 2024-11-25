@@ -55,7 +55,7 @@ curl -s -X "GET" \
     "$ABOVE_URL" \
     -H "accept: application/json"
 
-echo -e "The same satellites but in text format:\n"
+echo -e "\nThe same satellites but in text format:\n"
 
 ABOVE_TEXT_URL="$ABOVE_URL&format=text"
 
