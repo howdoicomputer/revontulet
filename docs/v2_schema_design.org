@@ -1,0 +1,115 @@
+#+title: V2 Schema Design
+
+* NOTE
+This is a rough draft and more personal notes.
+
+* Problem
+The V1 schema is limiting in what data it presents - which leads to inflexibility. What if clients want to display countdowns? What if clients want to display colors for every potential state that a satellite could be in?
+
+This document is the design for a new schema that would cover additional use cases besides just displaying lights.
+* Current Schema
+The current return schema for the v1 API looks like this:
+
+#+begin_src json
+[
+    {
+        "norad_id" 12345,
+        "color": "blue"
+    }
+]
+#+end_src
+
+This schema works well for clients who want to display color but it inhibits additional use cases.
+* Proposed Schema
+
+~/api/satellites/above~
+
+Request schema (this could be JSON or maybe HTTP params):
+
+#+begin_src json
+{
+    "norad_ids": ["string"],
+    "lat": "string",
+    "lng": "string",
+    "search_radius": "string"
+}
+#+end_src
+
+Response schema:
+
+#+begin_src json
+[
+    {
+        "norad_id": 12345,
+        "rise": {
+            "alt": "string",
+            "az": "string",
+            "az_octant": "string",
+            "utc_timestamp": "int",
+            "utc_datetime": "string",
+            "is_sunlit": "string",
+            "is_visible": "bool"
+            "is_present": "bool",
+            "client_time_timestamp": "string",
+            "eta": "string"
+        },
+        "culmination": {
+            "alt": "string",
+            "az": "string",
+            "az_octant": "string",
+            "utc_timestamp": "int",
+            "utc_datetime": "string",
+            "is_sunlit": "string",
+            "is_visible": "bool",
+            "is_present": "bool",
+            "client_local_timestamp": "string",
+            "eta": "string"
+        },
+        "set": {
+            "alt": "string",
+            "az": "string",
+            "az_octant": "string",
+            "utc_timestamp": "int",
+            "utc_datetime": "string",
+            "is_sunlit": "string",
+            "is_visible": "bool",
+            "is_present": "string",
+            "client_local_timestamp": "string",
+            "eta": "string"
+        },
+        "launch_date": "string",
+        "sat_name": "string",
+        "sat_lat": "string",
+        "sat_lng": "string",
+        "sat_alt": "string",
+    }
+]
+#+end_src
+
+This returned schema is very similar to what https://sat.terrestre.ar/docs/#/ returns. Howevever, it's annotated to return a color for each state, a localized timestamp for the client, and an ETA for when the event will occur. Additionally, it returns multiple satellites per req/res.
+
+* Implementation
+Implementing this will require quite a bit of refactoring as we're really combining the effects of both the N2YO API (returning multiple satellites for a location) and the Terrestre API (returning a lot of data for a single satellite passing over a location).
+
+** Potential Solution: API call per nomad_id
+We make multiple API calls per set. For example, given a payload of:
+
+#+begin_src json
+{
+    "nomad_ids" [1234, 12345]
+    ...
+}
+#+end_src
+
+We would make a Terrestre call per ID to create the data set.
+
+This is pretty terrible. It's very inefficient and makes denial of service easier.
+
+** Potential Solution: Batch dataload combined with Skyfield
+We can ditch upstream APIs and replace them with: https://rhodesmill.org/skyfield/ - a Python library for reading TLE data and subsequently predicting paths.
+
+We could get the TLEs using data from: https://celestrak.org/NORAD/elements/supplemental/
+
+This is how the Terrestre / Satpass API does it.
+
+The difference here would be in how we load the data. Terrestre caches the TLE data loads per request. We would instead create background workers that would load the data over time to build a database of TLE data to draw from. This will take a while to build out the initial DB but after it's done we would only need to incrementally update it.
