@@ -18,7 +18,7 @@ type Config struct {
 }
 
 func main() {
-	file, _ := os.Open("config.json")
+	file, _ := os.Open("client_example_config.json")
 	defer file.Close()
 
 	var config Config
