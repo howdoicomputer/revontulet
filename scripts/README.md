@@ -12,6 +12,8 @@ Will query out a list of satellites currently flying over Toulouse, France. It w
 
 It helps provide immediate feedback on whether or not the system is working on a basic level. You can open up take the emitted satellite data and open up N2YO and check to see where the satellites are.
 
+## Usage
+
 `./end_to_end_test.sh`
 
 # currently_over_toulouse.sh
