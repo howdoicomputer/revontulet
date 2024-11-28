@@ -10,7 +10,7 @@ Will query out a list of satellites currently flying over Toulouse, France. It w
 
 ## Purpose
 
-It helps provide immediate feedback on whether or not the system is working on a basic level. You can open up take the emitted satellite data and open up N2YO and check to see where the satellites are.
+It helps provide immediate feedback on whether or not the system is working on a basic level. You can take the emitted satellite data and open up N2YO and check to see where the satellites are.
 
 ## Usage
 
