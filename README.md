@@ -2,9 +2,11 @@
 
 Revontulet is an API that uses server sent events to create a notification bus to communicate when one or more of a group of satellites passes over a set of coordinates.
 
+This project was originally a take home exercise that I took a bit too far and now I'm using it to build out lights in my office to track when ISS passes over my house.
+
 API docs: https://revontulet.lol/docs#/
 
-For example, this curl command hits the `/api/satellites/above/stream` endpoint with these parameters:
+To provide a quick example, this curl command hits the `/api/satellites/above/stream` endpoint with these parameters:
 
 | Parameter          | Value                                          | Description                                  |
 |--------------------|------------------------------------------------|----------------------------------------------|
