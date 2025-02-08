@@ -1,6 +1,6 @@
 # Revontulet | About
 
-Revontulet is an API that - given a set of coordinates, NORAD_IDs, and colors - will continuously check to see if the provided satellites are over the provided coordinates and then emit light commands if they are.
+Revontulet is an API that uses server sent events to create a notification bus to communicate when one or more of a group of satellites passes over a set of coordinates.
 
 API docs: https://revontulet.lol/docs#/
 
@@ -39,15 +39,15 @@ NORAD_ID_10155: blue, NORAD_ID_11690: red, NORAD_ID_14277: green
 This API sends requests to two upstream APIs: https://sat.terrestre.ar/docs/#/ and https://www.n2yo.com/api/
 
 There are home built API clients for both in `libs/` that use httpx to asynchronously fetch API results and then cache them on a 10 second TTL
-if the responses are 200s. The reason why they're writen using httpx is because requests is a synchronous client that will block FastAPI's (the underlying API framework) event loop. There were some open source clients that already existed for the above APIs but they were synchronous in nature so I had to write my own.
+if the responses are 200s. The reason why they're writen using httpx is because `requests` is a synchronous client that will block FastAPI's (the underlying API framework) event loop. There were some open source clients that already existed for the above APIs but they were synchronous in nature so I had to write my own.
 
 ## Typing and Pydantic
 
-The routes themselves use those clients to fetch data and then filter and annotate the results. The codebase makes extensive use of Pydantic models to provide documented, typed, and validated interfaces for both the API routes and internal functions.
+Requests to the routes themselves use those clients to fetch data and then filter and annotate the results. The codebase makes extensive use of Pydantic models to provide documented, typed, and validated interfaces for both the API routes and internal functions.
 
 ## Testing
 
-The external routes are tested using pytest with mocks and stubbed out data. The mocks and stubs allows our unit tests to be ran without Internet or secrets.
+The external routes are tested using pytest with mocks and stubbed out data. The mocks and stubs allows our unit tests to be ran without the Internet or secrets.
 
 An end-to-end test exists in `scripts/end_to_end_test.sh` that is convenient for me to use. It will curl `/api/satellites` to resolve a set of satellites currently over a coordinate pair and then create a `sat_color_pair` string to feed into the `/api/satellites/above` endpoint to resolve satellites and their color data for a location.
 
@@ -142,7 +142,7 @@ curl -s -X 'GET' \
 
 ## /api/satellites/above|stream
 
-This endpoint is the meat and potatoes. It takes in a coordinate pair, a list of sat_color_pairs, and a search_radius in order to create a diffed list of satellites over that passed in set of coordinates.
+This endpoint is the meat and potatoes of the app. It takes in a coordinate pair, a list of sat_color_pairs, and a search_radius in order to create a diffed list of satellites that passed over a set of coordinates.
 
 ``` sh
 curl -X 'GET' \
